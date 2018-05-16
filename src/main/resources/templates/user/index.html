@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>User Page</title>
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag">
+
+    <div class="row-offcanvas row-offcanvas-left">
+        <div id="sidebar" class="sidebar-offcanvas">
+            <div class="col-md-12">
+                <h3>Sidebar (fixed)</h3>
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                    <li><a href="#">Section</a></li>
+                </ul>
+            </div>
+        </div>
+
+    <button sec:authorize="hasAuthority('USER')" type="button" class="btn btn-info" data-toggle="modal" data-target="#editProfile">Profile</button>
+
+
+
+    <form th:action="@{/}" th:object="${userForm}" method="post">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-8"><h2>User's <b>Task list</b></h2></div>
+                    <div class="col-sm-4">
+                        <button type="button" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                </div>
+            </div>
+            <table id="tasks" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="task : ${userForm.tasks}">
+                    <td hidden="hidden" th:text="${task.id}"></td>
+                    <td class="task-id" th:text="${task.name}"></td>
+                    <td class="task-name" th:text="${task.description}"></td>
+                    <td>
+                        <a class="add" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></a>
+                        <a class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
+                        <a class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <table id="template" style="display: none">
+            <tr>
+                <td><input type="text" class="form-control task-name"></td>
+                <td><input type="text" class="form-control task-desc"></td>
+                <td>
+                    <button class="add" th:formaction="@{/user/saveTask}" title="Add" data-toggle="tooltip"><i class="material-icons">&#xE03B;</i></button>
+                    <button class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></button>
+                    <button class="delete" th:formaction="@{/user/deleteTask}" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></button>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Modal edit profile -->
+        <div class="modal fade" id="editProfile" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Change Password</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>New Password</label>:
+                            <input type="password" id="password" name="password"
+                                   class="form-control"
+                                   placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label>Password Confirm</label>:
+                            <input type="password" id="passwordConfirm" name="passwordConfirm"
+                                   class="form-control"
+                                   placeholder="Password Confirm">
+                        </div>
+                        <input type="hidden" th:field="*{username}">
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-info action" th:formaction="@{/changePassword}">Save</button>
+                    </div>
+                </div>
+
+                <span id="actionMessage" th:text="${actionMessage}"></span>
+            </div>
+        </div>
+    </form>
+</div>
+
+</div>
+
+</body>
+</html>

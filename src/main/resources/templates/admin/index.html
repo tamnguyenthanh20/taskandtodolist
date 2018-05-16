@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/admin.css}"/>
+
+    <title>Admin Page</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <h1>Todo list</h1>
+
+    <div class="row">
+        <form th:action="@{/admin/}" method="post" th:object="${searchForm}">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label class="control-label control-label-left col-sm-3" >TODO Name</label>
+                        <div class="controls col-sm-9">
+
+                            <input th:field="*{todoName}" type="text" class="form-control" data-role="text" />
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label control-label-left col-sm-3" >TODO Status</label>
+                        <div class="controls col-sm-9">
+
+                            <select th:field="*{todoStatus}" class="form-control" data-role="select" >
+                                <option value=""></option>
+                                <option value="1">DONE</option>
+                                <option value="0">NOT DONE YET</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="form-group ">
+                        <label class="control-label control-label-left col-sm-3" >TODO Deadline</label>
+                        <div class="controls col-sm-9">
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar">
+                                    </i>
+                                </div>
+                                <input class="form-control" th:field="*{todoDeadline}" type="text"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label control-label-left col-sm-3" >Task Name</label>
+                        <div class="controls col-sm-9">
+
+                            <input th:field="*{taskName}" type="text" class="form-control" data-role="text" >
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group  pull-right">
+                        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /> </p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="row col-md-7 table-responsive">
+        <table class="table table-bordered table-hover">
+            <tr>
+                <th>TODO Name</th>
+                <th>TODO Status</th>
+                <th>TODO Deadline</th>
+                <th>Task Name</th>
+            </tr>
+            <tr th:each="todo : ${todos}">
+                <td hidden="hidden" th:text="${todo.id}"></td>
+                <td th:text="${todo.name}"></td>
+                <td th:text="${todo.complete}"></td>
+                <td th:text="${todo.deadline}"></td>
+                <td th:text="${todo.task.name}"></td>
+            </tr>
+        </table>
+    </div>
+
+    </div>
+
+    <div class="row" th:unless="*{#lists.isEmpty(todos)}">
+        <div th:if="${todos.totalPages != 1}" class="form-group col-md-11 pagination-centered">
+            <ul class="pagination">
+                <li th:class="${todos.number == 0} ? disabled">
+                    <a class="pageLink" th:href="@{/admin/(page=1)}">&laquo;</a>
+                </li>
+                <li th:class="${todos.number == 0} ? disabled">
+                    <a class="pageLink" th:href="@{/admin/(page=${todos.number})}">&larr;</a>
+                </li>
+                <li th:class="${todos.number == (page - 1)} ? 'active pointer-disabled'"
+                    th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                    <a class="pageLink" th:href="@{/admin/(page=${page})}"
+                       th:text="${page}"></a>
+                </li>
+                <li th:class="${todos.number + 1 == todos.totalPages} ? disabled">
+                    <a class="pageLink"
+                       th:href="@{/admin/(page=${todos.number + 2})}">&rarr;</a>
+                </li>
+                <li th:class="${todos.number + 1 == todos.totalPages} ? disabled">
+                    <a class="pageLink"
+                       th:href="@{/admin/(page=${todos.totalPages})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
