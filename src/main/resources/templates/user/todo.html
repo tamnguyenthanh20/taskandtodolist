@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Todo Page</title>
+</head>
+<body>
+    <div layout:fragment="content" th:remove="tag">
+        <form th:action="@{/}" th:object="${todoForm}" method="post">
+            <input type="text" hidden="hidden" th:field="*{id}" />
+            <input type="text" hidden="hidden" th:field="*{taskId}" />
+            <div class="row">
+                <div class="col-sm-9 col-md-9">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">New Task</h3>
+                        </div>
+                        <div class="panel-content">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Name</label>:
+                                    <input type="text" th:field="*{todoName}" class="form-control" placeholder="Name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Deadline</label>:
+                                    <input type="text" th:field="*{todoDeadline}" class="form-control" placeholder="Deadline">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-info action" th:formaction="@{/user/todo/save}">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

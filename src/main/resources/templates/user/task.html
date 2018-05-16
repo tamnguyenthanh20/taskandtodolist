@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Task Page</title>
+</head>
+<body>
+    <div layout:fragment="content" th:remove="tag">
+        <form th:action="@{/}" th:object="${task}" method="post">
+            <input type="text" hidden="hidden" th:field="*{id}" />
+            <div class="row">
+                <div class="col-sm-9 col-md-9">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">New Task</h3>
+                        </div>
+                        <div class="panel-content">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label>Name</label>:
+                                    <input type="text" th:field="*{name}" class="form-control" placeholder="Name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password Confirm</label>:
+                                    <input type="text" th:field="*{description}" class="form-control" placeholder="Description">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-info action" th:formaction="@{/user/task/save}">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

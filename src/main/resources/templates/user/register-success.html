@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Register User</title>
+</head>
+<body>
+<div layout:fragment="content" th:remove="tag">
+    <h1>Registration successful!</h1>
+    <p><a th:href="@{/login}">Login Now</a></p>
+</div>
+</body>
+</html>
