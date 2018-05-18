@@ -74,18 +74,21 @@ public class TodoRepositoryCustomImpl implements TodoRepositoryCustom {
             queryStr.append("AND DATE(t.deadline) = ").append("'").append(todoSearchForm.getTodoDeadline()).append("'");
         }
 
+        Query queryForCount = em.createNativeQuery(queryStr.toString(), Todo.class);
         Query query =  em.createNativeQuery(queryStr.toString(), Todo.class);
         query.setFirstResult(pageable.getOffset() );
         query.setMaxResults((pageable.getPageNumber() + 1) * pageable.getPageSize());
 
+        long total = queryForCount.getResultList().size();
+
         List<Todo> todos = query.getResultList();
 
-        return listTodoByPage(pageable, todos);
+        return listTodoByPage(pageable, todos, total);
     }
 
-    private Page<Todo> listTodoByPage(Pageable pageable, List<Todo> objectlist) {
+    private Page<Todo> listTodoByPage(Pageable pageable, List<Todo> objectList, long total) {
 
-        return new PageImpl<>(objectlist, pageable, todoRepository.count());
+        return new PageImpl<>(objectList, pageable, total);
     }
 
 }
