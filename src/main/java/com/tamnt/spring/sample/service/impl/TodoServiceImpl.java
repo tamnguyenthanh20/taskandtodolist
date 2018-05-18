@@ -4,6 +4,7 @@ package com.tamnt.spring.sample.service.impl;
 import com.tamnt.spring.sample.form.TodoSearchForm;
 import com.tamnt.spring.sample.model.Todo;
 import com.tamnt.spring.sample.repository.TodoRepository;
+import com.tamnt.spring.sample.repository.TodoRepositoryCustom;
 import com.tamnt.spring.sample.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,9 @@ public class TodoServiceImpl implements TodoService {
     @Autowired
     private TodoRepository todoRepository;
 
+    @Autowired
+    private TodoRepositoryCustom todoRepositoryCustom;
+
     @Override
     public Todo findById(Long id) {
         return todoRepository.findOne(id);
@@ -37,37 +41,8 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Page<Todo> findAllPageable(Pageable pageable) {
-        return todoRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Todo> findByConditionsPageable(TodoSearchForm searchForm, Pageable pageable) {
-
-        // Current support search by one field only
-        // If all of them are empty, search all
-
-        if (StringUtils.isEmpty(searchForm.getTodoName()) && StringUtils.isEmpty(searchForm.getTodoDeadline())
-                && StringUtils.isEmpty(searchForm.getTodoStatus()) && StringUtils.isEmpty(searchForm.getTaskName())){
-            return findAllPageable(pageable);
-        } else if (!StringUtils.isEmpty(searchForm.getTodoName())) {
-            return todoRepository.findByConditionTodoNamePageable(searchForm.getTodoName(), pageable);
-        } else if (!StringUtils.isEmpty(searchForm.getTodoStatus())) {
-
-            boolean isComplete = false;
-            if ("1".equals(searchForm.getTodoStatus())) {
-                isComplete = true;
-            }
-
-            return todoRepository.findByConditionTodoStatusPageable(isComplete, pageable);
-
-        } else if (!StringUtils.isEmpty(searchForm.getTodoDeadline())) {
-            return todoRepository.findByConditionTodoDeadlinePageable(searchForm.getTodoDeadline(), pageable);
-        } else if (!StringUtils.isEmpty(searchForm.getTaskName())) {
-            return todoRepository.findByConditionTaskNamePageable(searchForm.getTaskName(), pageable);
-        }
-
-        return null;
+    public Page<Todo> findByConditionsPageableNative(TodoSearchForm searchForm, Pageable pageable) {
+        return todoRepositoryCustom.findByConditionsPageable(searchForm, pageable);
     }
 
     @Override

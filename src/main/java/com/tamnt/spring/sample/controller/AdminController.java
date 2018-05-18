@@ -34,7 +34,7 @@ public class AdminController {
 
         int pageNumber = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
-        Page<Todo> todos = todoService.findByConditionsPageable(searchForm,
+        Page<Todo> todos = todoService.findByConditionsPageableNative(searchForm,
                 new PageRequest(pageNumber, INITIAL_PAGE_SIZE)); // show 5 items per page
 
         Pager pager = new Pager(todos.getTotalPages(), todos.getNumber(), BUTTONS_TO_SHOW);

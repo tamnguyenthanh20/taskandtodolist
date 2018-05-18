@@ -2,6 +2,7 @@ package com.tamnt.spring.sample.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * Created by tamnt on 5/12/18.
@@ -13,7 +14,7 @@ public class Todo {
 
     private Long id;
     private String name;
-    private LocalDate deadline;
+    private Date deadline;
     private boolean complete;
     private Task task;
 
@@ -39,11 +40,11 @@ public class Todo {
         this.name = name;
     }
 
-    public LocalDate getDeadline() {
+    public Date getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
 

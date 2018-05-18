@@ -16,9 +16,7 @@ public interface TodoService {
 
     void delete(Long id);
 
-    Page<Todo> findAllPageable(Pageable pageable);
-
-    Page<Todo> findByConditionsPageable(TodoSearchForm searchForm, Pageable pageable);
+    Page<Todo> findByConditionsPageableNative(TodoSearchForm searchForm, Pageable pageable);
 
     List<Todo> findByTaskId(Long taskId);
 }
