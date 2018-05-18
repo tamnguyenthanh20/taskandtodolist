@@ -16,7 +16,7 @@ public interface TodoRepository extends PagingAndSortingRepository<Todo, Long> {
     Page<Todo> findByConditionTodoNamePageable(@Param("todoName") String todoName, Pageable pageable);
 
     @Query("select t from Todo t where t.complete = :todoStatus")
-    Page<Todo> findByConditionTodoStatusPageable(@Param("todoStatus") String todoStatus, Pageable pageable);
+    Page<Todo> findByConditionTodoStatusPageable(@Param("todoStatus") boolean todoStatus, Pageable pageable);
 
     @Query("select t from Todo t where t.task.name = :taskName")
     Page<Todo> findByConditionTaskNamePageable(@Param("taskName") String taskName, Pageable pageable);

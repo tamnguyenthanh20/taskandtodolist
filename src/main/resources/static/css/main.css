@@ -133,3 +133,7 @@ table.table td .add {
     font-size: large;
     color: #ffffff;
 }
+
+.pd-top-100 {
+    padding-top: 100px;
+}

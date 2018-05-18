@@ -47,13 +47,20 @@ public class TodoServiceImpl implements TodoService {
         // Current support search by one field only
         // If all of them are empty, search all
 
-        if (StringUtils.isEmpty(searchForm.getTodoName()) && StringUtils.isEmpty(searchForm.getTodoName())
-                && StringUtils.isEmpty(searchForm.getTodoName()) && StringUtils.isEmpty(searchForm.getTodoName())){
+        if (StringUtils.isEmpty(searchForm.getTodoName()) && StringUtils.isEmpty(searchForm.getTodoDeadline())
+                && StringUtils.isEmpty(searchForm.getTodoStatus()) && StringUtils.isEmpty(searchForm.getTaskName())){
             return findAllPageable(pageable);
         } else if (!StringUtils.isEmpty(searchForm.getTodoName())) {
             return todoRepository.findByConditionTodoNamePageable(searchForm.getTodoName(), pageable);
         } else if (!StringUtils.isEmpty(searchForm.getTodoStatus())) {
-            return todoRepository.findByConditionTodoStatusPageable(searchForm.getTodoStatus(), pageable);
+
+            boolean isComplete = false;
+            if ("1".equals(searchForm.getTodoStatus())) {
+                isComplete = true;
+            }
+
+            return todoRepository.findByConditionTodoStatusPageable(isComplete, pageable);
+
         } else if (!StringUtils.isEmpty(searchForm.getTodoDeadline())) {
             return todoRepository.findByConditionTodoDeadlinePageable(searchForm.getTodoDeadline(), pageable);
         } else if (!StringUtils.isEmpty(searchForm.getTaskName())) {

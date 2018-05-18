@@ -4,6 +4,7 @@ import com.tamnt.spring.sample.controller.LoggingAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -16,55 +17,81 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    @Configuration
+    @Order(1)
+    public static class AdminWebSecurityConfig extends WebSecurityConfigurerAdapter{
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http
+                    .antMatcher("/admin/**")
+                    .httpBasic()
+                    .and()
+                    .csrf().disable()
+                    .authorizeRequests()
+                    .antMatchers("/admin/**")
+                    .authenticated();
+        }
+
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth.inMemoryAuthentication()
+                    .withUser("admin").password("admin").roles("ADMIN");
+        }
     }
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    @Configuration
+    @Order(2)
+    public static class UserWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private LoggingAccessDeniedHandler accessDeniedHandler;
+        @Bean
+        public BCryptPasswordEncoder bCryptPasswordEncoder() {
+            return new BCryptPasswordEncoder();
+        }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
+        @Autowired
+        private UserDetailsService userDetailsService;
+
+        @Autowired
+        private LoggingAccessDeniedHandler accessDeniedHandler;
+
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+
+            http.csrf().disable()
+                    .authorizeRequests()
                     .antMatchers(
-                            "/",
                             "/js/**",
                             "/css/**",
                             "/img/**",
                             "/register",
                             "/webjars/**").permitAll()
-                    .antMatchers("/user/**").hasAuthority("USER")
-                    .antMatchers("/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/", "/user/**").hasAuthority("USER")
                     .anyRequest().authenticated()
-                .and()
 
-                .formLogin()
+                    .and()
+                    .formLogin()
                     .loginPage("/login")
                     .permitAll()
-                .and()
-                .logout()
+                    .defaultSuccessUrl("/", true)
+                    .and()
+                    .logout()
                     .invalidateHttpSession(true)
                     .clearAuthentication(true)
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                     .logoutSuccessUrl("/login?logout")
                     .permitAll()
-                .and()
-                .exceptionHandling()
+                    .and()
+                    .exceptionHandling()
                     .accessDeniedHandler(accessDeniedHandler)
-                ;
-    }
+            ;
+        }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.inMemoryAuthentication()
-                .withUser("admin").password("admin123").roles("ADMIN");
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        @Override
+        protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+            auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        }
     }
 
 }

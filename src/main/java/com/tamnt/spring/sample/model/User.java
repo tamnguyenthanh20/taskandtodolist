@@ -1,6 +1,7 @@
 package com.tamnt.spring.sample.model;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -12,7 +13,7 @@ public class User {
     private String password;
     private String passwordConfirm;
     private Set<Role> roles;
-    private Set<Task> tasks;
+    private List<Task> tasks;
 
     public User() {
     }
@@ -63,11 +64,11 @@ public class User {
     }
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    public Set<Task> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Set<Task> tasks) {
+    public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
 }

@@ -38,8 +38,8 @@
                                     <td class="todo-name" th:text="${task.name}"></td>
                                     <td class="todo-deadline" th:text="${task.description}"></td>
                                     <td>
-                                        <a th:href="@{'/user/task/update/' + ${task.id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                        <a th:href="@{'/user/task/delete/' + ${task.id}}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                                        <a th:href="@{'/user/task/update/' + ${task.id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="glyphicon glyphicon-edit"></i></a>
+                                        <a th:href="@{'/user/task/delete/' + ${task.id}}" class="delete" title="Delete" data-toggle="tooltip"><i class="glyphicon glyphicon-remove"></i></a>
                                     </td>
                                 </tr>
                                 </tbody>

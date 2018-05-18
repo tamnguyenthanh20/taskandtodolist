@@ -31,6 +31,18 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
 
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String userIndex(Model model, Principal principal) {
+
+        User user = userService.findByUsername(principal.getName());
+
+        model.addAttribute("userForm", user);
+        model.addAttribute("tasks", userService.findAllTaskByUserName(principal.getName()));
+
+        return "user/index";
+    }
+
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registration(Model model) {
         model.addAttribute("userForm", new User());
@@ -66,13 +78,22 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping(value = "/changePassword", method = RequestMethod.POST)
-    public String changePassWord(Model model, @ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
+    @RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
+    public String changePasswordGet(Model model, Principal principal) {
+
+        User loggedUser =  userService.findByUsername(principal.getName());
+        model.addAttribute("userForm", loggedUser);
+
+        return "user/changePassword";
+    }
+
+    @RequestMapping(value = "/user/changePassword", method = RequestMethod.POST)
+    public String changePassWord(Model model, @ModelAttribute("userForm") User userForm, BindingResult bindingResult, Principal principal) {
 
         String actionMessage;
 
         if (userForm.getPasswordConfirm().equals(userForm.getPassword())) {
-            User user = userService.findByUsername(userForm.getUsername());
+            User user = userService.findByUsername(principal.getName());
             userService.changePassword(user, userForm.getPassword());
             actionMessage = "Your password has been successfully updated!";
         } else {
@@ -81,18 +102,7 @@ public class UserController {
 
         model.addAttribute("actionMessage", actionMessage);
 
-        return "user/index";
-    }
-
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public String userIndex(Model model, Principal principal) {
-
-        User user = userService.findByUsername(principal.getName());
-
-        model.addAttribute("userForm", user);
-        model.addAttribute("tasks", userService.findAllTaskByUserName(principal.getName()));
-
-        return "user/index";
+        return "redirect:/";
     }
 
     //===============================================================================================================

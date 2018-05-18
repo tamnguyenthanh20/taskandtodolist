@@ -8,39 +8,35 @@
     <title>User Page</title>
 </head>
 <body>
+
 <div layout:fragment="content" th:remove="tag">
+
     <form th:action="@{/}" th:object="${userForm}" method="post">
 
-        <div class="col-sm-4" th:if="${not #strings.isEmpty(currentTaskId)}">
-            <a th:href="@{'/user/todo/create?taskId=' + ${currentTaskId}}" class="btn btn-info add-new"><i class="fa fa-plus"></i>New Todo</a>
-        </div>
-
-        <br />
-
         <div class="row">
-            <div class="col-sm-3 col-md-3">
-                <div class="panel-group" id="accordion">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">Tasks</a>
-                            </h4>
-                        </div>
-                        <div id="collapseFour" class="panel-collapse collapse">
-                            <div class="list-group">
-                                <th:block th:each="task : ${userForm.tasks}">
-                                    <a th:href="@{'/user/task?taskid=' + ${task.id}}" class="list-group-item" th:text="${task.name}"></a>
-                                </th:block>
-                            </div>
-                        </div>
-                    </div>
+
+            <nav class="navbar-primary">
+                <ul class="navbar-primary-menu">
+                    <li>
+                        <th:block th:each="task : ${userForm.tasks}">
+                        <a th:href="@{'/user/task?taskid=' + ${task.id}}"><span class="glyphicon"></span><span class="nav-label" th:text="${task.name}"></span></a>
+                        </th:block>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="col-sm-9 col-md-9">
+                <div class="col-sm-4" th:if="${not #strings.isEmpty(currentTaskId)}">
+                    <a th:href="@{'/user/todo/create?taskId=' + ${currentTaskId}}" class="btn btn-info add-new"><i class="fa fa-plus"></i>New Todo</a>
                 </div>
             </div>
+
             <div class="col-sm-9 col-md-9" th:unless="${#lists.isEmpty(todos)}">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Todo List</h3>
                     </div>
+
                     <div class="panel-body">
                         <table id="todos" class="table table-bordered">
                             <thead>
@@ -56,11 +52,12 @@
                                 <td class="todo-id" hidden="hidden" th:text="${todo.id}"></td>
                                 <td class="todo-name" th:text="${todo.name}"></td>
                                 <td class="todo-deadline" th:text="${todo.deadline}"></td>
-                                <td class="todo-complete" th:text="${todo.complete}"></td>
+                                <td th:if="${todo.complete} == true" class="todo-complete">DONE</td>
+                                <td th:unless="${todo.complete} == true" class="todo-complete">NOT DONE</td>
                                 <td>
-                                    <a th:if="${todo.complete} == false" th:href="@{'/user/todo/markdone/' + ${todo.id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE444;</i></a>
-                                    <a th:href="@{'/user/todo/update/' + ${todo.id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="material-icons">&#xE254;</i></a>
-                                    <a th:href="@{'/user/todo/delete/' + ${todo.id}}" class="delete" title="Delete" data-toggle="tooltip"><i class="material-icons">&#xE872;</i></a>
+                                    <a th:if="${todo.complete} == false" th:href="@{'/user/todo/markdone/' + ${todo.id}}" class="edit" title="Mark Done" data-toggle="tooltip"><i class="glyphicon glyphicon-ok"></i></a>
+                                    <a th:href="@{'/user/todo/update/' + ${todo.id}}" class="edit" title="Edit" data-toggle="tooltip"><i class="glyphicon glyphicon-edit"></i></a>
+                                    <a th:href="@{'/user/todo/delete/' + ${todo.id}}" class="delete" title="Delete" data-toggle="tooltip"><i class="glyphicon glyphicon-remove"></i></a>
                                 </td>
                             </tr>
                             </tbody>
@@ -68,8 +65,6 @@
                     </div>
                 </div>
             </div>
-
-            <button sec:authorize="hasAuthority('USER')" type="button" class="btn btn-info" data-toggle="modal" data-target="#editProfile">Profile</button>
 
             <!-- Modal edit profile -->
             <div class="modal fade" id="editProfile" role="dialog">
@@ -107,6 +102,5 @@
         </div>
     </form>
 </div>
-
 </body>
 </html>
